@@ -1,28 +1,22 @@
-custom_string = gets.chomp
+ar_string = gets.chomp.downcase.split("")
 
-def get_indexes(custom_str)
-  input = custom_str.downcase.split("")
-  chars = []
-  amount = []
-  input.each do |char|
-    if chars.include?(char)
-      amount[chars.index(char)] += 1
-    else
-      chars[chars.length] = char
-      amount[amount.length] = 1
-    end
+chars = {}
+
+ar_string.each do |char|
+  if chars[char] != nil
+    chars[char] += 1
+  else
+    chars[char] = 1
   end
-  return amount
 end
 
-indexes = get_indexes(custom_string).sort.reverse
-
+amounts = chars.values.sort.reverse
 result = 0
-start = 26
+weight = 26
 
-indexes.each do |indx|
-  result += indx * start
-  start -= 1
+amounts.each do |value|
+  result += value * weight
+  weight -= 1
 end
 
 puts result
