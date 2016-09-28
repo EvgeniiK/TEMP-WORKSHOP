@@ -1,16 +1,15 @@
 input = gets.chomp.downcase.split("")
 
-chars = []
-amount = []
-input.each do |char|
-  if chars.include?(char)
-    amount[chars.index(char)] += 1
-  else
-    chars[chars.length] = char
-    amount[amount.length] = 1
+chars = {}
+
+input.each do |element|
+  if ("a".."z").include?(element)
+    if chars[element] != nil
+      chars[element] += 1
+    else
+      chars[element] = 1
+    end
   end
 end
 
-chars.each do |char|
-  print char + ": " + amount[chars.index(char)].to_s + "\n"
-end
+print chars

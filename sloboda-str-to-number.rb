@@ -3,10 +3,12 @@ ar_string = gets.chomp.downcase.split("")
 chars = {}
 
 ar_string.each do |char|
-  if chars[char] != nil
-    chars[char] += 1
-  else
-    chars[char] = 1
+  if ("a".."z").include?(char)
+    if chars[char] != nil
+      chars[char] += 1
+    else
+      chars[char] = 1
+    end
   end
 end
 
