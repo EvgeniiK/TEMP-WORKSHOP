@@ -6,7 +6,7 @@ result = 0
 while stop == false
   result += 1
   check = false
-  for i in 1..top_limit do
+  (1..top_limit).each do |i|
     if (result % i) != 0
       check = true
       break
