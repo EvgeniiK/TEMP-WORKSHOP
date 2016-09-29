@@ -11,7 +11,7 @@ def get_length(number)
   numbers_lib["8"] = "восемь"
   numbers_lib["9"] = "девять"
   numbers_lib["10"] = "десять"
-  numbers_lib["11"] = "одинадцать"
+  numbers_lib["11"] = "одиннадцать"
   numbers_lib["12"] = "двенадцать"
   numbers_lib["13"] = "тринадцать"
   numbers_lib["14"] = "четырнадцать"
@@ -23,10 +23,10 @@ def get_length(number)
   numbers_lib["20"] = "двадцать"
   numbers_lib["30"] = "тридцать"
   numbers_lib["40"] = "сорок"
-  numbers_lib["50"] = "пятдесят"
-  numbers_lib["60"] = "шестдесят"
-  numbers_lib["70"] = "семдесят"
-  numbers_lib["80"] = "восемдесят"
+  numbers_lib["50"] = "пятьдесят"
+  numbers_lib["60"] = "шестьдесят"
+  numbers_lib["70"] = "семьдесят"
+  numbers_lib["80"] = "восемьдесят"
   numbers_lib["90"] = "девяносто"
   numbers_lib["100"] = "сто"
   numbers_lib["200"] = "двести"
@@ -51,11 +51,17 @@ def get_length(number)
     parsed_number = number.to_s.split("")
     parsed_number[0] = parsed_number[0].to_i * 100
     parsed_number[0] = parsed_number[0].to_s
-    parsed_number[1] = parsed_number[1].to_i * 10
-    parsed_number[1] = parsed_number[1].to_s
-    str_val = numbers_lib[parsed_number[0]] + numbers_lib[parsed_number[1]] + \
-    numbers_lib[parsed_number[2]]
-    return str_val.length
+    if parsed_number[1].to_i == 1
+      str_val = numbers_lib[parsed_number[0]] + numbers_lib[parsed_number[1] + \
+        parsed_number[2]]
+      return str_val.length
+    else
+      parsed_number[1] = parsed_number[1].to_i * 10
+      parsed_number[1] = parsed_number[1].to_s
+      str_val = numbers_lib[parsed_number[0]] + numbers_lib[parsed_number[1]] + \
+        numbers_lib[parsed_number[2]]
+      return str_val.length
+    end
   end
 end
 
@@ -66,3 +72,5 @@ result = 0
 end
 
 puts result
+
+
