@@ -1,7 +1,6 @@
 require_relative 'deck.rb'
 require_relative 'croupier.rb'
 
-10000.times do
 deck = Deck.new
 croupier = Croupier.new
 
@@ -13,19 +12,15 @@ deck.shuffle(10)
   cards.push(deck.get_card)
 end
 
-=begin
-test_hand = []
-test_hand[0] = {'type' => 10, 'color' => 'H'}
-test_hand[1] = {'type' => 9, 'color' => 'H'}
-test_hand[2] = {'type' => 8, 'color' => 'H'}
-test_hand[3] = {'type' => 7, 'color' => 'H'}
-test_hand[4] = {'type' => 7, 'color' => 'D'}
-test_hand[5] = {'type' => 6, 'color' => 'H'}
-test_hand[6] = {'type' => 2, 'color' => 'H'}
-=end
+win = croupier.look(cards)
 
-croupier.look(cards)
+cards.sort { |x, y| x['type'] <=> y['type'] }.each do |card|
+  puts card
+end
 
-croupier.show_cards
+puts '========================================'
+puts win['combo']
 
+win['cards'].each do |w|
+  puts w
 end

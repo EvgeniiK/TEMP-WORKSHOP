@@ -1,9 +1,10 @@
+# Forming deck
 class Deck
   def initialize
     @deck = []
     (2..14).each do |n|
-      ['H', 'D', 'C', 'S'].each do |c|
-        @deck.push({'type' => n, 'color' => c})
+      %w(H D C S).each do |c|
+        @deck.push('type' => n, 'color' => c)
       end
     end
   end
