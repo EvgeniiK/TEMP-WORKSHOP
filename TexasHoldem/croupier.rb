@@ -10,15 +10,13 @@ class Croupier
     if @straight != false
       @straight_flush = check_straight_flush(@straight)
       if @straight_flush != false
-        if check_royal(@straight_flush) != false
+        if check_royal(@straight_flush)
           @response['combo'] = 'Royal flush'
-          @response['cards'] = @straight_flush
-          return @response
         else
           @response['combo'] = 'Straight flush'
-          @response['cards'] = @straight_flush
-          return @response
         end
+        @response['cards'] = @straight_flush
+        return @response
       end
     end
     @four_of_a_kind = check_four_of_a_kind(@cards)
@@ -64,7 +62,7 @@ class Croupier
     @high_card = check_high_card(@cards)
     @response['combo'] = 'High card'
     @response['cards'] = @high_card
-    return @response
+    @response
   end
 
   # Replace numbers 11/12/13/14 with J/Q/K/A
@@ -111,15 +109,12 @@ class Croupier
         max['type'] = kind[0].to_i
       end
     end
-    if max['size'] == 2
-      win = []
-      cards.each do |card|
-        win.push(card) if card['type'] == max['type']
-      end
-      return win
-    else
-      return false
+    return false unless max['size'] == 2
+    win = []
+    cards.each do |card|
+      win.push(card) if card['type'] == max['type']
     end
+    win
   end
 
   # Returns "Two pairs" cards or false
@@ -164,15 +159,12 @@ class Croupier
         max['type'] = kind[0].to_i
       end
     end
-    if max['size'] == 3
-      win = []
-      cards.each do |card|
-        win.push(card) if card['type'] == max['type']
-      end
-      return win
-    else
-      return false
+    return false unless max['size'] == 3
+    win = []
+    cards.each do |card|
+      win.push(card) if card['type'] == max['type']
     end
+    win
   end
 
   # Returns "Full house" cards or false
@@ -264,24 +256,18 @@ class Croupier
         max['type'] = kind[0].to_i
       end
     end
-    if max['size'] == 4
-      win = []
-      cards.each do |card|
-        win.push(card) if card['type'] == max['type']
-      end
-      return win
-    else
-      return false
+    return false unless max['size'] == 4
+    win = []
+    cards.each do |card|
+      win.push(card) if card['type'] == max['type']
     end
+    win
   end
 
   # Returns true if straight is Royal and false if no
   def check_royal(cards)
-    if cards[0]['type'] == 14
-      return true
-    else
-      return false
-    end
+    return false unless cards[0]['type'] == 14
+    true
   end
 
   # Returns "Straight flush" cards or false
@@ -300,11 +286,8 @@ class Croupier
         straight_flush = false if replace == false
       end
     end
-    if straight_flush == true
-      return cards
-    else
-      return false
-    end
+    return false unless straight_flush == true
+    cards
   end
 
   # Returns "Flush" cards or false
@@ -320,18 +303,15 @@ class Croupier
         @max['type'] = color[0]
       end
     end
-    if @max['size'] >= 5
-      counter = 0
-      win = []
-      cards.reverse.each do |card|
-        if card['color'] == @max['type']
-          win.push(card)
-          counter += 1
-        end
-        return win if counter == 5
+    return false unless @max['size'] >= 5
+    counter = 0
+    win = []
+    cards.reverse.each do |card|
+      if card['color'] == @max['type']
+        win.push(card)
+        counter += 1
       end
-    else
-      return false
+      return win if counter == 5
     end
   end
 
@@ -360,16 +340,10 @@ class Croupier
       cards[0]['straight'] = false
       win.push(cards[1]) if cards[2]['straight'] == true
     end
-    if win.length >= 5
-      after_check = check_straight(win.reverse)
-      if after_check != false
-        return after_check
-      else
-        return false
-      end
-    else
-      return false
-    end
+    return false unless win.length >= 5
+    after_check = check_straight(win.reverse)
+    return false unless after_check != false
+    after_check
   end
 
   # Returns amount of cards of each type
