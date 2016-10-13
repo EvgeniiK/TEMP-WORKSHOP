@@ -1,4 +1,7 @@
+# Operations with cards
 class Croupier
+
+  # Returns the win combination
   def look(cards)
     @cards = sort_cards(cards)
     @response = { 'combo' => '', 'cards' => [] }
@@ -64,6 +67,7 @@ class Croupier
     return @response
   end
 
+  # Replace numbers 11/12/13/14 with J/Q/K/A
   def parse(win)
     parsed_win = []
     win['cards'].each do |card|
@@ -85,20 +89,22 @@ class Croupier
       parsed_card['color'] = card['color'] + ' '
       parsed_win.push(parsed_card)
     end
-    return parsed_win
+    parsed_win
   end
 
   private
 
+  # Returns the high card
   def check_high_card(cards)
     win = []
     win.push(cards[6])
-    return win
+    win
   end
 
+  # Returns "One pair" cards or false
   def check_one_pair(cards)
     kinds = parse_cards(cards)
-    max = {'type' => '', 'size' => 0}
+    max = { 'type' => '', 'size' => 0 }
     kinds.each do |kind|
       if kind[1] > max['size']
         max['size'] = kind[1]
@@ -108,9 +114,7 @@ class Croupier
     if max['size'] == 2
       win = []
       cards.each do |card|
-        if card['type'] == max['type']
-          win.push(card)
-        end
+        win.push(card) if card['type'] == max['type']
       end
       return win
     else
@@ -118,9 +122,10 @@ class Croupier
     end
   end
 
+  # Returns "Two pairs" cards or false
   def check_two_pairs(cards)
     kinds = parse_cards(cards)
-    max = {'type' => '', 'size' => 0}
+    max = { 'type' => '', 'size' => 0 }
     kinds.each do |kind|
       if kind[1] > max['size']
         max['size'] = kind[1]
@@ -130,17 +135,15 @@ class Croupier
     if max['size'] == 2
       setups = []
       kinds.each do |kind|
-        if kind[1] == max['size']
-          setups.push(kind)
-        end
+        setups.push(kind) if kind[1] == max['size']
       end
     end
     if max['size'] == 2 && setups.length >= 2
       win = []
       cards.each do |card|
-        if card['type'] == setups[0][0].to_i || \
-            card['type'] == setups[1][0].to_i || \
-            (!setups[2].nil? && card['type'] == setups[2][0].to_i)
+        if card['type'] == setups[0][0].to_i \
+            || card['type'] == setups[1][0].to_i \
+            || (!setups[2].nil? && card['type'] == setups[2][0].to_i)
           win.push(card)
         end
         break if win.length == 4
@@ -151,9 +154,10 @@ class Croupier
     end
   end
 
+  # Returns "Three of a kind" cards or false
   def check_three_of_a_kind(cards)
     kinds = parse_cards(cards)
-    max = {'type' => '', 'size' => 0}
+    max = { 'type' => '', 'size' => 0 }
     kinds.each do |kind|
       if kind[1] > max['size']
         max['size'] = kind[1]
@@ -163,9 +167,7 @@ class Croupier
     if max['size'] == 3
       win = []
       cards.each do |card|
-        if card['type'] == max['type']
-          win.push(card)
-        end
+        win.push(card) if card['type'] == max['type']
       end
       return win
     else
@@ -173,8 +175,9 @@ class Croupier
     end
   end
 
+  # Returns "Full house" cards or false
   def check_full_house(cards)
-    kinds = parse_cards(cards).sort{|x, y| y[1] <=> x[1]}
+    kinds = parse_cards(cards).sort { |x, y| y[1] <=> x[1] }
     counter = 1
     full_house = true
     setups = []
@@ -189,9 +192,7 @@ class Croupier
       end
       if counter == 2
         if kind[1] < 2
-          if dec_ones == 1
-            full_house = false
-          end
+          full_house = false if dec_ones == 1
         elsif kind[1] == 3
           setups.push(kind)
         else
@@ -208,59 +209,41 @@ class Croupier
       if setups.length == 2 && setups[1][1] == 3
         if setups[0][0].to_i >= setups[1][0].to_i
           @cards.each do |card|
-            if card['type'] == setups[0][0].to_i
-              win.push(card)
-            end
+            win.push(card) if card['type'] == setups[0][0].to_i
           end
           @cards.each do |card|
-            if card['type'] == setups[1][0].to_i
-              win.push(card)
-            end
+            win.push(card) if card['type'] == setups[1][0].to_i
             break if win.length == 5
           end
         else
           @cards.each do |card|
-            if card['type'] == setups[1][0].to_i
-              win.push(card)
-            end
+            win.push(card) if card['type'] == setups[1][0].to_i
           end
           @cards.each do |card|
-            if card['type'] == setups[0][0].to_i
-              win.push(card)
-            end
+            win.push(card) if card['type'] == setups[0][0].to_i
             break if win.length == 5
           end
         end
       elsif setups.length == 2 && setups[1][1] == 2
         @cards.each do |card|
-          if card['type'] == setups[0][0].to_i
-            win.push(card)
-          end
+          win.push(card) if card['type'] == setups[0][0].to_i
         end
         @cards.each do |card|
-          if card['type'] == setups[1][0].to_i
-            win.push(card)
-          end
+          win.push(card) if card['type'] == setups[1][0].to_i
           break if win.length == 5
         end
       else
         @cards.each do |card|
-          if card['type'] == setups[0][0].to_i
-            win.push(card)
-          end
+          win.push(card) if card['type'] == setups[0][0].to_i
         end
         if setups[1][0].to_i >= setups[2][0].to_i
           @cards.each do |card|
-            if card['type'] == setups[1][0].to_i
-              win.push(card)
-            end
+            win.push(card) if card['type'] == setups[1][0].to_i
             break if win.length == 5
           end
         else
           @cards.each do |card|
-            if card['type'] == setups[2][0].to_i
-              win.push(card)
-            end
+            win.push(card) if card['type'] == setups[2][0].to_i
             break if win.length == 5
           end
         end
@@ -271,9 +254,10 @@ class Croupier
     end
   end
 
+  # Returns "Four of a kind" cards or false
   def check_four_of_a_kind(cards)
     kinds = parse_cards(cards)
-    max = {'type' => '', 'size' => 0}
+    max = { 'type' => '', 'size' => 0 }
     kinds.each do |kind|
       if kind[1] > max['size']
         max['size'] = kind[1]
@@ -283,9 +267,7 @@ class Croupier
     if max['size'] == 4
       win = []
       cards.each do |card|
-        if card['type'] == max['type']
-          win.push(card)
-        end
+        win.push(card) if card['type'] == max['type']
       end
       return win
     else
@@ -293,6 +275,7 @@ class Croupier
     end
   end
 
+  # Returns true if straight is Royal and false if no
   def check_royal(cards)
     if cards[0]['type'] == 14
       return true
@@ -301,6 +284,7 @@ class Croupier
     end
   end
 
+  # Returns "Straight flush" cards or false
   def check_straight_flush(cards)
     straight_flush = true
     color = @max['type']
@@ -313,9 +297,7 @@ class Croupier
             cards[i]['color'] = color
           end
         end
-        if replace == false
-          straight_flush = false
-        end
+        straight_flush = false if replace == false
       end
     end
     if straight_flush == true
@@ -325,12 +307,13 @@ class Croupier
     end
   end
 
+  # Returns "Flush" cards or false
   def check_flush(cards)
-    colors = {'H' => 0, 'D' => 0, 'C' => 0, 'S' => 0}
+    colors = { 'H' => 0, 'D' => 0, 'C' => 0, 'S' => 0 }
     cards.each do |card|
       colors[card['color']] += 1
     end
-    @max = {'size' => 0, 'type' => ''}
+    @max = { 'size' => 0, 'type' => '' }
     colors.each do |color|
       if color[1] > @max['size']
         @max['size'] = color[1]
@@ -345,15 +328,14 @@ class Croupier
           win.push(card)
           counter += 1
         end
-        if counter == 5
-          return win
-        end
+        return win if counter == 5
       end
     else
       return false
     end
   end
 
+  # Returns "Straight" cards or false
   def check_straight(cards)
     win = []
     counter = 0
@@ -376,11 +358,8 @@ class Croupier
       cards[0]['straight'] = true
     else
       cards[0]['straight'] = false
-      if cards[2]['straight'] == true
-        win.push(cards[1])
-      end
+      win.push(cards[1]) if cards[2]['straight'] == true
     end
-
     if win.length >= 5
       after_check = check_straight(win.reverse)
       if after_check != false
@@ -393,6 +372,7 @@ class Croupier
     end
   end
 
+  # Returns amount of cards of each type
   def parse_cards(cards)
     kinds = {}
     cards.each do |card|
@@ -402,11 +382,12 @@ class Croupier
         kinds[card['type'].to_s] = 1
       end
     end
-    return kinds
+    kinds
   end
 
+  # Sorting cards
   def sort_cards(cards)
-    cards.sort{|x, y| x['type'] <=> y['type']}
+    cards.sort { |x, y| x['type'] <=> y['type'] }
   end
 
 end
