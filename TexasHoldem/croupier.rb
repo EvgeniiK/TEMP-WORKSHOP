@@ -64,6 +64,30 @@ class Croupier
     return @response
   end
 
+  def parse(win)
+    parsed_win = []
+    win['cards'].each do |card|
+      parsed_card = { 'color' => '', 'type' => '' }
+      case card['type']
+      when 14
+        parsed_card['type'] = 'A '
+      when 13
+        parsed_card['type'] = 'K '
+      when 12
+        parsed_card['type'] = 'Q '
+      when 11
+        parsed_card['type'] = 'J '
+      when 10
+        parsed_card['type'] = '10'
+      else
+        parsed_card['type'] = card['type'].to_s + ' '
+      end
+      parsed_card['color'] = card['color'] + ' '
+      parsed_win.push(parsed_card)
+    end
+    return parsed_win
+  end
+
   private
 
   def check_high_card(cards)
